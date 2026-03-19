@@ -21,8 +21,7 @@ The pipeline runs automatically every night:
 
 Users sign up at the web app and choose exactly how they want their recap delivered.
 
-![Signup form — top](assets/signup-top.png)
-![Signup form — bottom](assets/signup-bottom.png)
+![Signup form](assets/signup-full.png)
 
 **Preferences stored per user:**
 - Delivery: Email / SMS / Both
