@@ -1,5 +1,35 @@
 // Shared TypeScript types for the NBA Morning Recap app
 
+// ── User / database types ────────────────────────────────────────────────────
+
+export type DeliveryPref = 'email' | 'sms' | 'both';
+export type ContentPref = 'text' | 'audio' | 'both';
+export type DetailLevel = 'flash' | 'recap' | 'deep_dive';
+
+// Shape of a row coming out of the users table (includes db-assigned fields)
+export interface User {
+  id: number;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  delivery_pref: DeliveryPref;
+  content_pref: ContentPref;
+  detail_level: DetailLevel;
+  favorite_team: string | null;
+  created_at: string;
+}
+
+// Shape of the data needed to create a new user (no id or created_at yet)
+export interface NewUser {
+  name: string;
+  email: string | null;
+  phone: string | null;
+  delivery_pref: DeliveryPref;
+  content_pref: ContentPref;
+  detail_level: DetailLevel;
+  favorite_team: string | null;
+}
+
 export interface Player {
   id: number;
   firstName: string;

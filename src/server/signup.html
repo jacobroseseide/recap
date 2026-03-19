@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBA Morning Recap — Sign Up</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .logo {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #f97316;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      border-color: #f97316;
+    }
+
+    select option { background: #1a1a1a; }
+
+    .radio-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      flex: 1;
+      min-width: 80px;
+    }
+
+    .radio-option input[type="radio"] { display: none; }
+
+    .radio-option label {
+      display: block;
+      text-align: center;
+      padding: 0.55rem 0.5rem;
+      border: 1px solid #333;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #888;
+      transition: all 0.15s;
+      margin: 0;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      border-color: #f97316;
+      color: #f97316;
+      background: rgba(249, 115, 22, 0.08);
+    }
+
+    .radio-option label:hover { border-color: #555; color: #ccc; }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 0.4rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #2a2a2a;
+      margin: 1.75rem 0;
+    }
+
+    #team-field { display: none; }
+
+    /* Custom team picker */
+    .team-picker {
+      position: relative;
+    }
+
+    .team-picker-trigger {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #888;
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: border-color 0.15s;
+      text-align: left;
+    }
+
+    .team-picker-trigger:hover,
+    .team-picker-trigger.open { border-color: #f97316; }
+
+    .team-picker-trigger img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .team-picker-trigger.has-value { color: #f0f0f0; }
+    .team-picker-trigger.has-value img { display: block; }
+
+    .team-picker-trigger .chevron {
+      margin-left: auto;
+      color: #555;
+      font-size: 0.7rem;
+      transition: transform 0.15s;
+    }
+
+    .team-picker-trigger.open .chevron { transform: rotate(180deg); }
+
+    .team-picker-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .team-picker-menu.open { display: block; }
+
+    .team-group-label {
+      padding: 0.5rem 0.85rem 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #555;
+    }
+
+    .team-option {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.5rem 0.85rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #ccc;
+      transition: background 0.1s;
+    }
+
+    .team-option:hover { background: #252525; color: #fff; }
+    .team-option.selected { color: #f97316; background: rgba(249,115,22,0.07); }
+
+    .team-option img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* Scrollbar styling for the dropdown */
+    .team-picker-menu::-webkit-scrollbar { width: 6px; }
+    .team-picker-menu::-webkit-scrollbar-track { background: transparent; }
+    .team-picker-menu::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    .submit-btn {
+      width: 100%;
+      background: #f97316;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.8rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .submit-btn:hover { background: #ea6a0a; }
+    .submit-btn:disabled { background: #444; cursor: not-allowed; }
+
+    .message {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .message.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">NBA Morning Recap</div>
+    <h1>Wake up to last night's games.</h1>
+    <p class="subtitle">Get a daily recap delivered every morning — scores, performances, and what it all means.</p>
+
+    <form id="signup-form">
+      <div class="field">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="First name" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" />
+        <p class="hint">At least one of email or phone is required.</p>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field">
+        <label>How should we reach you?</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="del-email" name="delivery_pref" value="email" />
+            <label for="del-email">Email</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="del-sms" name="delivery_pref" value="sms" />
+            <label for="del-sms">SMS</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="del-both" name="delivery_pref" value="both" checked />
+            <label for="del-both">Both</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What format do you want?</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="cnt-text" name="content_pref" value="text" />
+            <label for="cnt-text">Text</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="cnt-audio" name="content_pref" value="audio" />
+            <label for="cnt-audio">Audio</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="cnt-both" name="content_pref" value="both" checked />
+            <label for="cnt-both">Both</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How much detail?</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="det-flash" name="detail_level" value="flash" />
+            <label for="det-flash">Flash</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="det-recap" name="detail_level" value="recap" checked />
+            <label for="det-recap">Recap</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="det-deep" name="detail_level" value="deep_dive" />
+            <label for="det-deep">Deep Dive</label>
+          </div>
+        </div>
+        <p class="hint">Flash: 60-second overview. Recap: 2–3 min highlights. Deep dive: 5-min full breakdown.</p>
+      </div>
+
+      <div class="field">
+        <label>What do you want to focus on?</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="focus-league" name="focus" value="league" checked />
+            <label for="focus-league">Around the League</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="focus-team" name="focus" value="my_team" />
+            <label for="focus-team">My Team</label>
+          </div>
+        </div>
+        <p class="hint">My Team puts your team front and center. Around the League covers the whole night.</p>
+      </div>
+
+      <div class="field" id="team-field">
+        <label>Favorite Team</label>
+        <input type="hidden" id="favorite_team" name="favorite_team" value="" />
+        <div class="team-picker" id="team-picker">
+          <button type="button" class="team-picker-trigger" id="team-trigger">
+            <img id="team-trigger-logo" src="" alt="" />
+            <span id="team-trigger-label">Select a team...</span>
+            <span class="chevron">▼</span>
+          </button>
+          <div class="team-picker-menu" id="team-menu"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Sign Me Up</button>
+      <div class="message" id="msg"></div>
+    </form>
+  </div>
+
+  <script>
+    // ── Team data ────────────────────────────────────────────────────────────
+    var LOGO = 'https://a.espncdn.com/i/teamlogos/nba/500/';
+    var TEAMS = {
+      'Eastern Conference': [
+        { name: 'Atlanta Hawks',       abbr: 'atl' },
+        { name: 'Boston Celtics',      abbr: 'bos' },
+        { name: 'Brooklyn Nets',       abbr: 'bkn' },
+        { name: 'Charlotte Hornets',   abbr: 'cha' },
+        { name: 'Chicago Bulls',       abbr: 'chi' },
+        { name: 'Cleveland Cavaliers', abbr: 'cle' },
+        { name: 'Detroit Pistons',     abbr: 'det' },
+        { name: 'Indiana Pacers',      abbr: 'ind' },
+        { name: 'Miami Heat',          abbr: 'mia' },
+        { name: 'Milwaukee Bucks',     abbr: 'mil' },
+        { name: 'New York Knicks',     abbr: 'nyk' },
+        { name: 'Orlando Magic',       abbr: 'orl' },
+        { name: 'Philadelphia 76ers',  abbr: 'phi' },
+        { name: 'Toronto Raptors',     abbr: 'tor' },
+        { name: 'Washington Wizards',  abbr: 'wsh' },
+      ],
+      'Western Conference': [
+        { name: 'Dallas Mavericks',        abbr: 'dal' },
+        { name: 'Denver Nuggets',          abbr: 'den' },
+        { name: 'Golden State Warriors',   abbr: 'gsw' },
+        { name: 'Houston Rockets',         abbr: 'hou' },
+        { name: 'Los Angeles Clippers',    abbr: 'lac' },
+        { name: 'Los Angeles Lakers',      abbr: 'lal' },
+        { name: 'Memphis Grizzlies',       abbr: 'mem' },
+        { name: 'Minnesota Timberwolves',  abbr: 'min' },
+        { name: 'New Orleans Pelicans',    abbr: 'no' },
+        { name: 'Oklahoma City Thunder',   abbr: 'okc' },
+        { name: 'Phoenix Suns',            abbr: 'phx' },
+        { name: 'Portland Trail Blazers',  abbr: 'por' },
+        { name: 'Sacramento Kings',        abbr: 'sac' },
+        { name: 'San Antonio Spurs',       abbr: 'sas' },
+        { name: 'Utah Jazz',               abbr: 'utah' },
+      ],
+    };
+
+    // ── Build custom team picker menu ─────────────────────────────────────────
+    var menu = document.getElementById('team-menu');
+    Object.keys(TEAMS).forEach(function(conf) {
+      var label = document.createElement('div');
+      label.className = 'team-group-label';
+      label.textContent = conf;
+      menu.appendChild(label);
+
+      TEAMS[conf].forEach(function(team) {
+        var opt = document.createElement('div');
+        opt.className = 'team-option';
+        opt.dataset.name = team.name;
+        opt.dataset.abbr = team.abbr;
+        opt.innerHTML =
+          '<img src="' + LOGO + team.abbr + '.png" alt="' + team.name + '" />' +
+          '<span>' + team.name + '</span>';
+        opt.addEventListener('click', function() {
+          selectTeam(team.name, team.abbr);
+        });
+        menu.appendChild(opt);
+      });
+    });
+
+    // Sets the selected team in the hidden input and updates the trigger button
+    function selectTeam(name, abbr) {
+      document.getElementById('favorite_team').value = name;
+      var trigger = document.getElementById('team-trigger');
+      document.getElementById('team-trigger-label').textContent = name;
+      document.getElementById('team-trigger-logo').src = LOGO + abbr + '.png';
+      document.getElementById('team-trigger-logo').alt = name;
+      trigger.classList.add('has-value');
+      closeMenu();
+      // Highlight selected option
+      document.querySelectorAll('.team-option').forEach(function(el) {
+        el.classList.toggle('selected', el.dataset.name === name);
+      });
+    }
+
+    // Toggles the dropdown open/closed
+    function closeMenu() {
+      document.getElementById('team-menu').classList.remove('open');
+      document.getElementById('team-trigger').classList.remove('open');
+    }
+
+    document.getElementById('team-trigger').addEventListener('click', function() {
+      var isOpen = menu.classList.contains('open');
+      if (isOpen) { closeMenu(); } else {
+        menu.classList.add('open');
+        this.classList.add('open');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('team-picker').contains(e.target)) closeMenu();
+    });
+
+    // ── Show/hide favorite team field based on focus selection ─────────────────
+    document.querySelectorAll('input[name="focus"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        document.getElementById('team-field').style.display =
+          this.value === 'my_team' ? 'block' : 'none';
+      });
+    });
+
+    // Handle form submission via fetch
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.querySelector('.submit-btn');
+      const msg = document.getElementById('msg');
+      btn.disabled = true;
+      btn.textContent = 'Signing up...';
+      msg.style.display = 'none';
+
+      const focus = document.querySelector('input[name="focus"]:checked')?.value;
+      const data = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim() || null,
+        phone: document.getElementById('phone').value.trim() || null,
+        delivery_pref: document.querySelector('input[name="delivery_pref"]:checked')?.value,
+        content_pref: document.querySelector('input[name="content_pref"]:checked')?.value,
+        detail_level: document.querySelector('input[name="detail_level"]:checked')?.value,
+        favorite_team: focus === 'my_team' ? (document.getElementById('favorite_team').value || null) : null,
+      };
+
+      if (!data.email && !data.phone) {
+        msg.className = 'message error';
+        msg.textContent = 'Please provide at least an email address or phone number.';
+        msg.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign Me Up';
+        return;
+      }
+
+      try {
+        const res = await fetch('/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (res.ok) {
+          msg.className = 'message success';
+          msg.textContent = "You're in! Your first recap arrives tomorrow morning.";
+          msg.style.display = 'block';
+          e.target.reset();
+          document.getElementById('team-field').style.display = 'none';
+          document.getElementById('team-trigger-label').textContent = 'Select a team...';
+          document.getElementById('team-trigger-logo').src = '';
+          document.getElementById('team-trigger').classList.remove('has-value');
+          document.querySelectorAll('.team-option').forEach(function(el) { el.classList.remove('selected'); });
+          document.getElementById('msg').style.display = 'block';
+        } else {
+          msg.className = 'message error';
+          msg.textContent = json.error || 'Something went wrong. Please try again.';
+          msg.style.display = 'block';
+        }
+      } catch {
+        msg.className = 'message error';
+        msg.textContent = 'Network error. Please try again.';
+        msg.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Sign Me Up';
+    });
+  </script>
+</body>
+</html>

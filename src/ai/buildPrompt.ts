@@ -82,16 +82,23 @@ function detailLevelInstructions(
   gameData: FormattedRecapData
 ): string {
   if (detailLevel === 'flash') {
+    const teamNote = favoriteTeam
+      ? `- If ${favoriteTeam} played last night, mention their game first.`
+      : '';
     return `DETAIL LEVEL — FLASH:
 - Cover every game. One sentence per game, max.
 - Each sentence must include: teams, final score, winner, and one standout player name.
 - No elaboration. Just the facts, sharp and clean.
-- Target length: ~60 seconds when read aloud.`;
+${teamNote}
+- Target length: ~60 seconds when read aloud.`.trim();
   }
 
   if (detailLevel === 'recap') {
+    const teamNote = favoriteTeam
+      ? `- Favorite team: ${favoriteTeam}. If they played last night, they must be one of your highlighted games — lead with their game. If they did not play, open with a one-liner: "The ${favoriteTeam} were off last night — here's what happened around the league."`
+      : '- Editorially pick the 2-3 most compelling games (closest contest, biggest blowout, wildest individual performance — your call).';
     return `DETAIL LEVEL — RECAP:
-- Editorially pick the 2-3 most compelling games (closest contest, biggest blowout, wildest individual performance — your call).
+${teamNote}
 - For each highlighted game: one full paragraph covering the game story and top performers.
 - For all other games: one tight sentence each — score, winner, one name.
 - Close with a brief standings snapshot mentioning where relevant teams stand. Use records (e.g. "32-18") or relative terms ("leads the East", "third-best in the West") — never say "ranked 3rd" or use a rank number.
