@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["ts-node", "--project", "tsconfig.json", "src/server/index.ts"],
       "port": 3000
+    },
+    {
+      "name": "orderbook-server",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/jacobrose-seiden/Desktop/projects/orderbook && make server 2>&1 && ./orderbook_server"],
+      "port": 8080
     }
   ]
 }

@@ -1,11 +1,12 @@
 // Converts a recap script string to an MP3 using the ElevenLabs TTS API.
 // Saves the file to output/recap-[YYYY-MM-DD].mp3 and returns the path.
+import 'dotenv/config';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
 const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1/text-to-speech';
-const MODEL_ID = 'eleven_monolingual_v1';
+const MODEL_ID = 'eleven_multilingual_v2';
 
 // Returns the output file path for a given date string (YYYY-MM-DD).
 // Falls back to today's date if none provided.
